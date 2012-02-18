@@ -10,9 +10,8 @@
         android:id="@+id/tag_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#444444"
-            android:padding="10dip"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:padding="10dip" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -32,17 +31,34 @@
                 style="@style/TextAppearance.GEN_EditLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/actfm_TVA_tag_description_label" />
+                android:text="@string/actfm_TVA_tag_description_label"
+                android:textSize="25dip" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/tag_description"
-            style="@style/TextAppearance.GEN_EditLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
-            android:text="@string/actfm_TVA_tag_description_label" />
+            android:layout_marginTop="5dip"
+            style="@style/TextAppearance.TAd_ItemTitle"
+            android:textColor="#666" />
+        
     </LinearLayout>
+    
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/TEA_tab_activity"
+            style="@style/TextAppearance.TAd_ItemTitle"
+            android:layout_marginLeft="10dip"
+            android:layout_marginTop="5dip"
+            android:textColor="#888" />
+
+        <View
+            android:id="@+id/TEA_Separator"
+            style="@style/TEA_Separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1px" />
 
     <ProgressBar
         android:id="@+id/comments_progressBar"

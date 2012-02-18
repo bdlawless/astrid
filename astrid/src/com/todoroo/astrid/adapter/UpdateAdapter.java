@@ -12,8 +12,10 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,6 +47,7 @@ public class UpdateAdapter extends CursorAdapter {
     private final int resource;
     private final LayoutInflater inflater;
     private final ImageDiskCache imageCache;
+    private final String linkColor;
 
     /**
      * Constructor
@@ -65,12 +68,21 @@ public class UpdateAdapter extends CursorAdapter {
         super(fragment.getActivity(), c, autoRequery);
         DependencyInjectionService.getInstance().inject(this);
 
+        linkColor = getLinkColor(fragment);
+
         inflater = (LayoutInflater) fragment.getActivity().getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
         imageCache = ImageDiskCache.getInstance();
 
         this.resource = resource;
         this.fragment = fragment;
+
+    }
+
+    public static String getLinkColor(Fragment f) {
+        TypedValue colorType = new TypedValue();
+        f.getActivity().getTheme().resolveAttribute(R.attr.asDetailsColor, colorType, false);
+        return "#" + Integer.toHexString(colorType.data).substring(2);
     }
 
     /* ======================================================================
@@ -163,15 +175,9 @@ public class UpdateAdapter extends CursorAdapter {
                 nameValue = r.getString(R.string.UAd_title_comment, nameValue,
                         update.getValue(Update.TARGET_NAME));
             if(TextUtils.isEmpty(nameValue)){
-                nameView.setText(fragment.getActivity().getString(R.string.ENA_no_user));
+                nameValue = fragment.getActivity().getString(R.string.ENA_no_user);
             }
-            else {
-                nameView.setText(nameValue);
-            }
-        }
 
-        // description
-        final TextView descriptionView = (TextView)view.findViewById(R.id.description); {
             String description = update.getValue(Update.ACTION);
             String message = update.getValue(Update.MESSAGE);
             if(update.getValue(Update.ACTION_CODE).equals("task_comment") ||
@@ -179,8 +185,10 @@ public class UpdateAdapter extends CursorAdapter {
                 description = message;
             else if(!TextUtils.isEmpty(message))
                 description += " " + message;
-            descriptionView.setText(description);
+
+            nameView.setText(Html.fromHtml(String.format("%s <font color=%s>%s</font>", nameValue, linkColor, description)));
         }
+
 
         // date
         final TextView date = (TextView)view.findViewById(R.id.date); {

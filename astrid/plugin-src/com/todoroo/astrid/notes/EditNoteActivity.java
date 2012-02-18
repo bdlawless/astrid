@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
@@ -49,6 +50,7 @@ import com.todoroo.astrid.actfm.ActFmCameraModule.CameraResultCallback;
 import com.todoroo.astrid.actfm.ActFmCameraModule.ClearImageCallback;
 import com.todoroo.astrid.actfm.sync.ActFmPreferenceService;
 import com.todoroo.astrid.actfm.sync.ActFmSyncService;
+import com.todoroo.astrid.adapter.UpdateAdapter;
 import com.todoroo.astrid.core.PluginServices;
 import com.todoroo.astrid.dao.MetadataDao.MetadataCriteria;
 import com.todoroo.astrid.dao.UpdateDao;
@@ -91,6 +93,7 @@ public class EditNoteActivity extends LinearLayout implements TimerActionListene
     private final Fragment fragment;
     private final ImageDiskCache imageCache;
     private final int cameraButton;
+    private final String linkColor;
 
     private final List<UpdatesChangedListener> listeners = new LinkedList<UpdatesChangedListener>();
 
@@ -104,6 +107,8 @@ public class EditNoteActivity extends LinearLayout implements TimerActionListene
 
         imageCache = ImageDiskCache.getInstance();
         this.fragment = fragment;
+
+        linkColor = UpdateAdapter.getLinkColor(fragment);
 
         cameraButton = getDefaultCameraButton();
 
@@ -344,18 +349,12 @@ public class EditNoteActivity extends LinearLayout implements TimerActionListene
 
         // name
         final TextView nameView = (TextView)view.findViewById(R.id.title); {
+            String nameValue = item.title;
             if (TextUtils.isEmpty(item.title)) {
-                nameView.setText(fragment.getActivity().getString(R.string.ENA_no_user));
+                nameValue = fragment.getActivity().getString(R.string.ENA_no_user);
             }
-            else {
-                nameView.setText(item.title);
-            }
-        }
-
-        // description
-        final TextView descriptionView = (TextView)view.findViewById(R.id.description); {
-            descriptionView.setText(item.body);
-            Linkify.addLinks(descriptionView, Linkify.ALL);
+            nameView.setText(Html.fromHtml(String.format("%s <font color=%s>%s</font>", nameValue, linkColor, item.body))); //$NON-NLS-1$
+            Linkify.addLinks(nameView, Linkify.ALL);
         }
 
         // date

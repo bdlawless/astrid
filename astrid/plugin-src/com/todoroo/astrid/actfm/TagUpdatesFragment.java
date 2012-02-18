@@ -5,6 +5,7 @@ import greendroid.widget.AsyncImageView;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBar;
 import android.support.v4.app.ListFragment;
@@ -31,6 +32,7 @@ import com.timsu.astrid.R;
 import com.todoroo.andlib.data.TodorooCursor;
 import com.todoroo.andlib.service.Autowired;
 import com.todoroo.andlib.service.DependencyInjectionService;
+import com.todoroo.andlib.utility.AndroidUtilities;
 import com.todoroo.andlib.utility.DateUtilities;
 import com.todoroo.andlib.utility.Preferences;
 import com.todoroo.astrid.actfm.ActFmCameraModule.CameraResultCallback;
@@ -130,7 +132,8 @@ public class TagUpdatesFragment extends ListFragment {
             ((TextView) ab.getCustomView().findViewById(R.id.title)).setText(title);
         }
 
-//        if (AndroidUtilities.isTabletSized(getActivity())) {
+        if (AndroidUtilities.isTabletSized(getActivity()) && tagData != null) {
+            getView().setBackgroundColor(Color.rgb(200, 200, 200));
             TextView tagTitle = (TextView) getView().findViewById(R.id.tag_title);
             String tagName = tagData.getValue(TagData.NAME);
             tagTitle.setText(tagName);
@@ -140,11 +143,11 @@ public class TagUpdatesFragment extends ListFragment {
             AsyncImageView imageView = (AsyncImageView) getView().findViewById(R.id.tag_picture);
             imageView.setDefaultImageResource(TagService.getDefaultImageIDForTag(tagName));
             imageView.setUrl(tagData.getValue(TagData.PICTURE));
-//        }
-//        else {
-//            View tagHeader = getView().findViewById(R.id.tag_header);
-//            tagHeader.setVisibility(View.GONE);
-//        }
+        }
+        else {
+            View tagHeader = getView().findViewById(R.id.tag_header);
+            tagHeader.setVisibility(View.GONE);
+        }
 
         final ImageButton commentButton = (ImageButton) getView().findViewById(R.id.commentButton);
         addCommentField = (EditText) getView().findViewById(R.id.commentField);
