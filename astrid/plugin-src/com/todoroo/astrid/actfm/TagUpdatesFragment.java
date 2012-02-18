@@ -1,6 +1,7 @@
 package com.todoroo.astrid.actfm;
 
 import android.app.Activity;
+import greendroid.widget.AsyncImageView;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -48,6 +49,7 @@ import com.todoroo.astrid.helper.ProgressBarSyncResultCallback;
 import com.todoroo.astrid.service.StatisticsConstants;
 import com.todoroo.astrid.service.StatisticsService;
 import com.todoroo.astrid.service.TagDataService;
+import com.todoroo.astrid.tags.TagService;
 import com.todoroo.astrid.utility.Flags;
 
 public class TagUpdatesFragment extends ListFragment {
@@ -127,6 +129,23 @@ public class TagUpdatesFragment extends ListFragment {
             String title = (tagData == null) ? getString(R.string.TLA_all_activity) : getString(R.string.tag_updates_title, tagData.getValue(TagData.NAME));
             ((TextView) ab.getCustomView().findViewById(R.id.title)).setText(title);
         }
+
+//        if (AndroidUtilities.isTabletSized(getActivity())) {
+            TextView tagTitle = (TextView) getView().findViewById(R.id.tag_title);
+            String tagName = tagData.getValue(TagData.NAME);
+            tagTitle.setText(tagName);
+            TextView descriptionTitle = (TextView) getView().findViewById(R.id.tag_description);
+            descriptionTitle.setText(tagData.getValue(TagData.TAG_DESCRIPTION));
+
+            AsyncImageView imageView = (AsyncImageView) getView().findViewById(R.id.tag_picture);
+            imageView.setDefaultImageResource(TagService.getDefaultImageIDForTag(tagName));
+            imageView.setUrl(tagData.getValue(TagData.PICTURE));
+//        }
+//        else {
+//            View tagHeader = getView().findViewById(R.id.tag_header);
+//            tagHeader.setVisibility(View.GONE);
+//        }
+
         final ImageButton commentButton = (ImageButton) getView().findViewById(R.id.commentButton);
         addCommentField = (EditText) getView().findViewById(R.id.commentField);
         addCommentField.setOnEditorActionListener(new OnEditorActionListener() {
